@@ -1,11 +1,23 @@
+import cookieParser from "cookie-parser";
 import type { Application, Request, Response } from "express";
 import express  from "express";
 import status from "http-status";
+import cors from "cors"
+import { config } from "./config/config";
 
 const app : Application = express();
 
 
 //? this is for middleware
+app.use(express.json());
+app.use(express.urlencoded({extended : true}));
+app.use(cookieParser());
+app.use(cors({
+    origin : config.backEndOrigin,
+    credentials : true
+}))
+
+
 
 
 //? this is the root route
