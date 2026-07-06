@@ -7,7 +7,6 @@ import { config } from "./config/config";
 
 const app : Application = express();
 
-
 //? this is for middleware
 app.use(express.json());
 app.use(express.urlencoded({extended : true}));
