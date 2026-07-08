@@ -6,6 +6,7 @@ import cors from "cors"
 import { config } from "./config/config";
 import { notFound } from "./middlewares/notFound";
 import globalErrorHandler from "./middlewares/globalErrorHanldler";
+import { authRouter } from "./modules/Authentication/auth.route";
 
 const app : Application = express();
 
@@ -40,6 +41,10 @@ app.get('/', (req : Request, res : Response)=>{
         }
     });
 })
+
+
+//? authentication route
+app.use('/api/auth', authRouter);
 
 
 
