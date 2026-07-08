@@ -36,7 +36,17 @@ const updateGear = catchAsync(async (req: Request, res: Response, next: NextFunc
 });
 
 const deleteGear = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const gearId = req.params.id;
+    const userId = req.user?.id;
+    const isAdmin = req.user?.role === UserRole.ADMIN ? true : false;
 
+    await providerServices.deleteGear(gearId as string, userId as string, isAdmin);
+
+    return sendResponse(res, {
+        success : true,
+        statusCode : status.OK,
+        message : "Gear Deleted Successfully!"
+    })
 });
 
 const getIncomingOrders = catchAsync(async (req: Request, res: Response, next: NextFunction) => {

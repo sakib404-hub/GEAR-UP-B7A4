@@ -41,7 +41,30 @@ const updateGear = async (payLoad: IUpdateGear, gearId: string, userId: string, 
   return updatedGear;
 };
 
-const deleteGear = async () => {
+const deleteGear = async (gearId : string, userId : string, isAdmin : boolean) => {
+  const gear = await prisma.gearItems.findUnique({
+    where: {
+      id: gearId
+    },
+    select: {
+      providerId: true
+    }
+  });
+
+  if (!gear) {
+    throw new Error("Gear Not Found!");
+  }
+
+  if (gear.providerId !== userId && !isAdmin) {
+    throw new Error("Forbidden Access.");
+  }
+
+  await prisma.gearItems.delete({
+    where : {
+      id : gearId
+    }
+  })
+  return null;
 
 };
 

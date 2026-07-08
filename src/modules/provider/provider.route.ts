@@ -8,7 +8,7 @@ const router  = Router();
 
 router.post("/gear",auth(UserRole.PROVIDER, UserRole.ADMIN), providerController.createGear);
 router.put("/gear/:id",auth(UserRole.PROVIDER, UserRole.ADMIN), providerController.updateGear);
-router.delete("/gear/:id", providerController.deleteGear);
+router.delete("/gear/:id",auth(UserRole.PROVIDER, UserRole.ADMIN), providerController.deleteGear);
 
 // Orders
 router.get("/orders", providerController.getIncomingOrders);
