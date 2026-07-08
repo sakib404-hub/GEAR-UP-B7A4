@@ -5,6 +5,7 @@ import status from "http-status";
 import cors from "cors"
 import { config } from "./config/config";
 import { notFound } from "./middlewares/notFound";
+import globalErrorHandler from "./middlewares/globalErrorHanldler";
 
 const app : Application = express();
 
@@ -45,5 +46,8 @@ app.get('/', (req : Request, res : Response)=>{
 
 //? if any of the above route is not found
 app.use(notFound);
+
+//? global error handler
+app.use(globalErrorHandler);
 
 export default app;
