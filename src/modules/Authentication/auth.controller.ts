@@ -18,13 +18,31 @@ const registerUser = catchAsync(async (req: Request, res: Response, next : NextF
 
 const loginUser = catchAsync(async (req: Request, res: Response,next : NextFunction) => {
     const payLoad = req.body;
-    const result = await authServices.loginUser(payLoad);
+    const {accessToken, refreshToken} = await authServices.loginUser(payLoad);
+
+
+    res.cookie("accessToken", accessToken, {
+        httpOnly : true,
+        secure : false,
+        sameSite : "none",
+        maxAge : 1000 * 60 * 60 * 24 
+    })
+
+    res.cookie("refreshToken", refreshToken, {
+        httpOnly : true,
+        secure : false,
+        sameSite :"none",
+        maxAge : 1000 * 60 * 60 * 24 * 7
+    })
 
     return sendResponse(res, {
         success : true,
         statusCode : status.OK,
         message : "User Successfully Logged In!",
-        data : result
+        data : {
+            accessToken,
+            refreshToken
+        }
     })
 });
 

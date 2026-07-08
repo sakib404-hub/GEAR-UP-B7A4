@@ -11,13 +11,13 @@ import { authRouter } from "./modules/Authentication/auth.route";
 const app : Application = express();
 
 //? this is for middleware
-app.use(express.json());
-app.use(express.urlencoded({extended : true}));
-app.use(cookieParser());
 app.use(cors({
     origin : config.backEndOrigin,
     credentials : true
 }))
+app.use(express.json());
+app.use(express.urlencoded({extended : true}));
+app.use(cookieParser());
 
 
 
