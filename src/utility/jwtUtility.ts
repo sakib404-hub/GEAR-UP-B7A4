@@ -7,3 +7,21 @@ export const generateToken = (payLoad : JwtPayload, accessSecret : string, expir
 
     return token;
 }
+
+export const verifiedToken = (token : string, secret : string)=>{
+    try{
+
+        const verifiedToken = jwt.verify(token, secret);
+
+        return {
+            success : true,
+            data : verifiedToken
+        }
+
+    }catch(error){
+        return {
+            success : false,
+            errMessage : error instanceof Error ? error.message : "Internal Server Error!"
+        }
+    }
+}
