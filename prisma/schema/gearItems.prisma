@@ -1,0 +1,22 @@
+model GearItems {
+    id String @id @default(uuid())
+    title String
+    description  String
+    pricePerDay Int
+    brand String
+    stockQuantity Int
+    status GearItemStatus @default(AVAILABLE)
+
+
+    //? creating relationship with the provider , category
+    providerId String
+    provider User @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+    categoryId String
+    category Category @relation(fields: [categoryId], references: [id],  onDelete: Cascade)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    reviews Reviews[]
+}

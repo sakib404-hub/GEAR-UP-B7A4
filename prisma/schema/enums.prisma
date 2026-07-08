@@ -1,0 +1,15 @@
+enum UserRole {
+  CUSTOMER
+  PROVIDER
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  BLOCKED
+}
+
+enum GearItemStatus {
+  AVAILABLE
+  UNAVAILABLE
+}

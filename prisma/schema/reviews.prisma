@@ -1,0 +1,13 @@
+model Reviews {
+    id String @id @default(uuid())
+    comment String
+    rating Int
+    createdAt DateTime @default(now())
+
+    //? making relationship with the user
+    userId String
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    gearId String
+    gearItems GearItems @relation(fields: [gearId], references: [id], onDelete: Cascade)
+}
