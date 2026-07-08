@@ -9,3 +9,8 @@ export interface IRegisterPayLoad {
     phone ? : string;
     address ? : string;
 }
+
+export interface ILoginPayLoad{
+    email : string;
+    password : string;
+}
