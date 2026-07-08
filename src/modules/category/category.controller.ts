@@ -6,9 +6,8 @@ import status from "http-status";
 
 const createCategory = catchAsync(async(req : Request, res : Response, next : NextFunction)=>{
     const payLoad = req.body;
-    const userId = req.user?.id;
 
-    const result = await categoryServices.createCategory(payLoad, userId as string);
+    const result = await categoryServices.createCategory(payLoad);
 
     return sendResponse(res, {
         success : true,

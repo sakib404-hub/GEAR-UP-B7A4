@@ -1,11 +1,10 @@
 import { prisma } from "../../lib/prisma"
-import { ICategory } from "./category.interface"
+import { ICategory } from "./category.interface";
 
-const createCategory = async(payLoad : ICategory, userId : string)=>{
+const createCategory = async(payLoad : ICategory)=>{
     const result = await prisma.category.create({
         data : {
             ...payLoad,
-            userId
         }
     })
 
@@ -13,16 +12,7 @@ const createCategory = async(payLoad : ICategory, userId : string)=>{
 }
 
 const getAllCategory = async() =>{
-    const result = await prisma.category.findMany({
-        include : {
-            user : {
-               select : {
-                name : true,
-                email : true
-               }
-            },
-        },
-    })
+    const result = await prisma.category.findMany({})
 
     return result;
 }

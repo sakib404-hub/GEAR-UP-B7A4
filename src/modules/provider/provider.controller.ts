@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { catchAsync } from "../../utility/catchAsync";
-import { providerServices } from "./provider.service";
 
 const createGear = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+
 
 });
 
