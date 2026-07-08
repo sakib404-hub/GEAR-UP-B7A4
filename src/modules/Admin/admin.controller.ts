@@ -16,11 +16,18 @@ const getAllUsers = catchAsync(async (req: Request, res: Response, next: NextFun
 });
 
 const updateUserStatus = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    await adminServices.updateUserStatus();
+    
 });
 
 const getAllGear = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    await adminServices.getAllGear();
+    const result = await adminServices.getAllGear();
+
+    return  sendResponse(res, {
+        success : true,
+        statusCode : status.OK,
+        message : "All Gears Retived Successfully",
+        data : result
+    })
 });
 
 const getAllRentals = catchAsync(async (req: Request, res: Response, next: NextFunction) => {

@@ -13,7 +13,10 @@ const getAllUsers = async() => {
 
 const updateUserStatus = () => {};
 
-const getAllGear = () => {};
+const getAllGear = async() => {
+    const result = await prisma.gearItems.findMany();
+    return result;
+};
 
 const getAllRentals = () => {};
 
