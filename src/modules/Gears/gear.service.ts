@@ -23,13 +23,9 @@ const getGearDetails = async(gearId : string)=>{
     return gear;
 }
 
-const getGearCategories = ()=>{
-
-}
 
 
 export const gearServices = {
     getAllGear,
     getGearDetails,
-    getGearCategories
 }

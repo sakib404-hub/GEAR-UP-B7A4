@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { Prisma } from "../../generated/prisma/client";
 import status from "http-status";
 
-const globalErrorHandler = (err: unknown, req: Request, res: Response, next: NextFunction) => {
+const globalErrorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
     console.log(err);
 
     let statusCode;
@@ -43,7 +43,7 @@ const globalErrorHandler = (err: unknown, req: Request, res: Response, next: Nex
         statusCode : statusCode || status.INTERNAL_SERVER_ERROR,
         errorName : errorName,
         messagge : errorMessage,
-        // error : err.stack
+        error : err.stack
     })
 
 }

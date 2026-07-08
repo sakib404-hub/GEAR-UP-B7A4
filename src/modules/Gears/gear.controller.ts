@@ -29,12 +29,7 @@ const getGearDetails = catchAsync(async(req : Request, res : Response, next : Ne
 }) 
 
 
-const getGearCategories = catchAsync(async(req : Request, res : Response, next : NextFunction)=>{
-
-}) 
-
 export const gearController = {
     getAllGear,
     getGearDetails,
-    getGearCategories
 }

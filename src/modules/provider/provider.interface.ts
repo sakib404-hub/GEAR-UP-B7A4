@@ -6,6 +6,15 @@ export interface ICreateGear{
     pricePerDay : number;
     brand : string;
     stockQuantity : number;
-    availabilityStatus : GearItemStatus;
+    status : GearItemStatus;
     categoryId : string;
+}
+
+export interface IUpdateGear{
+    title ?: string;
+    description ? : string;
+    pricePerDay ?: number;
+    brand ?: string;
+    stockQuantity ?: number;
+    status ?: GearItemStatus;
 }

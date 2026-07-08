@@ -7,7 +7,7 @@ const router  = Router();
 
 
 router.post("/gear",auth(UserRole.PROVIDER, UserRole.ADMIN), providerController.createGear);
-router.put("/gear/:id", providerController.updateGear);
+router.put("/gear/:id",auth(UserRole.PROVIDER, UserRole.ADMIN), providerController.updateGear);
 router.delete("/gear/:id", providerController.deleteGear);
 
 // Orders
