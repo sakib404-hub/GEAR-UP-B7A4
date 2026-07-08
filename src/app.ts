@@ -10,6 +10,7 @@ import { authRouter } from "./modules/Authentication/auth.route";
 import { gearRouter } from "./modules/Gears/gear.route";
 import { providerRouter } from "./modules/provider/provider.route";
 import { categoryRouter } from "./modules/category/category.route";
+import { adminRouter } from "./modules/Admin/admin.route";
 
 const app : Application = express();
 
@@ -58,6 +59,9 @@ app.use('/api/provider', providerRouter);
 //? category route
 app.use('/api/categories', categoryRouter);
 
+
+//? admin route
+app.use('/api/admin', adminRouter);
 
 
 
