@@ -1,10 +1,12 @@
 import { Router } from "express";
 import { providerController } from "./provider.controller";
+import { auth } from "../../middlewares/auth";
+import { UserRole } from "../../../generated/prisma/enums";
 
 const router  = Router();
 
 
-router.post("/gear", providerController.createGear);
+router.post("/gear",auth(UserRole.PROVIDER, UserRole.ADMIN), providerController.createGear);
 router.put("/gear/:id", providerController.updateGear);
 router.delete("/gear/:id", providerController.deleteGear);
 

@@ -1,5 +1,14 @@
-const createGear = async () => {
+import { prisma } from "../../lib/prisma";
+import { ICreateGear } from "./provider.interface";
 
+const createGear = async (payLoad : ICreateGear, providerId : string) => {
+  const result = await prisma.gearItems.create({
+    data : {
+      ...payLoad,
+      providerId
+    }
+  })
+  return result;
 };
 
 const updateGear = async () => {
