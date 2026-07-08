@@ -1,3 +1,4 @@
+import { UserStatus } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 
 const getAllUsers = async() => {
@@ -11,7 +12,39 @@ const getAllUsers = async() => {
     return result;
 };
 
-const updateUserStatus = () => {};
+const updateUserStatus = async(payLoad : UserStatus, userId : string) => {
+    const user = await prisma.user.findUnique({
+        where : {
+            id : userId
+        },
+        select : {
+            status : true
+        }
+    })
+
+    if(!user){
+        throw new Error("User Not Found!");
+    }
+
+    if(user.status === payLoad){
+         throw new Error(`User is already ${payLoad.toLowerCase()}.`);
+    }
+
+    const updatedUser = await prisma.user.update({
+        where : {
+            id : userId
+        },
+        data : {
+            status : payLoad
+        },
+        omit : {
+            password : true,
+            createdAt : true,
+        }
+    })
+
+    return updatedUser;
+};
 
 const getAllGear = async() => {
     const result = await prisma.gearItems.findMany();
