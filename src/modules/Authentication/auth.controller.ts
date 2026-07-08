@@ -47,6 +47,17 @@ const loginUser = catchAsync(async (req: Request, res: Response,next : NextFunct
 });
 
 const getMe = catchAsync(async (req: Request, res: Response,next : NextFunction) => {
+
+    const userId = req.user?.id;
+
+    const result = await authServices.getMe(userId as string);
+
+    return sendResponse(res, {
+        success : true,
+        statusCode : status.OK,
+        message : "User profile retrieved successfully.",
+        data : result
+    })
     
 });
 

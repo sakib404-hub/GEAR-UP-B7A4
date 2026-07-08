@@ -84,9 +84,22 @@ const loginUser = async (payload: ILoginPayLoad) => {
 };
 
 const getMe = async (userId: string) => {
+    const result = await prisma.user.findUnique({
+        where : {
+            id : userId
+        },
+        include : {
+            reviews : true,
+        },
+        omit : {
+            password : true
+        }
+    })
+   if(!result){
+    throw new Error("User Does not exists!");
+   }
 
-    
-   
+   return result;
 };
 
 export const authServices = {
