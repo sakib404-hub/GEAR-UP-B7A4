@@ -14,4 +14,5 @@ model User {
   //? relationship with other tables
   reviews Reviews[]
   gearItems GearItems[]
+  category Category[]
 }
