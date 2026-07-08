@@ -19,6 +19,14 @@ const createCategory = catchAsync(async(req : Request, res : Response, next : Ne
 })
 
 const getAllCategory = catchAsync(async(req : Request, res : Response, next : NextFunction)=>{
+    const result = await categoryServices.getAllCategory();
+
+    return sendResponse(res, {
+        success : true,
+        statusCode : status.OK,
+        message : "All category fetched successfully",
+        data : result
+    })
 
 })
 
