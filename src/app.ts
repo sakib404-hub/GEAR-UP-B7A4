@@ -8,6 +8,8 @@ import { notFound } from "./middlewares/notFound";
 import globalErrorHandler from "./middlewares/globalErrorHanldler";
 import { authRouter } from "./modules/Authentication/auth.route";
 import { gearRouter } from "./modules/Gears/gear.route";
+import { providerRouter } from "./modules/provider/provider.route";
+import { categoryRouter } from "./modules/category/category.route";
 
 const app : Application = express();
 
@@ -49,6 +51,12 @@ app.use('/api/auth', authRouter);
 
 //? gear route
 app.use('/api/gear', gearRouter);
+
+//? provider route
+app.use('/api/provider', providerRouter);
+
+//? category route
+app.use('/api/categories', categoryRouter);
 
 
 

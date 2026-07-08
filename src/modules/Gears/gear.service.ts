@@ -7,7 +7,7 @@ const getAllGear = async()=>{
 
 const getGearDetails = async(gearId : string)=>{
 
-    const gear = prisma.gearItems.findUnique({
+    const gear = await prisma.gearItems.findUnique({
         where : {
             id : gearId
         },
@@ -16,8 +16,11 @@ const getGearDetails = async(gearId : string)=>{
         }
     })
 
-    return gear;
+    if(!gear){
+        throw new Error("The requested gear was not found.");
+    }
 
+    return gear;
 }
 
 const getGearCategories = ()=>{
