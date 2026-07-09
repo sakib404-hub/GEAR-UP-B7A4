@@ -3,7 +3,6 @@ import { Prisma } from "../../generated/prisma/client";
 import status from "http-status";
 
 const globalErrorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
-    console.log(err);
 
     let statusCode;
     let errorMessage = err instanceof Error ? err.message : "Internal Server Error";

@@ -13,3 +13,11 @@ enum GearItemStatus {
   AVAILABLE
   UNAVAILABLE
 }
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PICKED_UP
+  RETURNED
+  CANCELLED
+}

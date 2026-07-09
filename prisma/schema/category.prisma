@@ -6,4 +6,6 @@ model Category {
 
 
     gearItems GearItems[]
+
+    // @@map("category")
 }

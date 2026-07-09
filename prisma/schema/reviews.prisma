@@ -10,4 +10,6 @@ model Reviews {
 
     gearId String
     gearItems GearItems @relation(fields: [gearId], references: [id], onDelete: Cascade)
+
+    @@map("reviews")
 }
