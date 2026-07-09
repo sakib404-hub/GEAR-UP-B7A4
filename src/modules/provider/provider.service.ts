@@ -1,3 +1,4 @@
+import { OrderStatus } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 import { ICreateGear, IUpdateGear } from "./provider.interface";
 
@@ -75,19 +76,52 @@ const getIncomingOrders = async (providerId : string) => {
           providerId : providerId
         }
       },
-      include : {
-        gear : {
-          select : {
-            providerId : true
-          }
-        }
-      }
     });
 
     return orders;
 };
 
-const updateOrderStatus = async () => {
+const updateOrderStatus = async (
+  providerId : string,
+  orderId : string,
+  status : OrderStatus,
+  isAdmin : boolean
+) => {
+
+  const order = await prisma.rentalOrders.findUnique({
+    where : {
+      id : orderId
+    },
+    include : {
+      gear : {
+        select : {
+          providerId : true
+        }
+      }
+    }
+  })
+
+  if(!order){
+    throw new Error("Order does not exist!");
+  }
+
+  if(order.gear.providerId !== providerId && !isAdmin){
+    throw new Error("Access Denied!");
+  }
+
+  const updatedOrder = await prisma.rentalOrders.update({
+    where : {
+      id : orderId,
+      gear : {
+        providerId
+      }
+    },
+    data : {
+      status
+    }
+  })
+
+  return updatedOrder;
 
 };
 
