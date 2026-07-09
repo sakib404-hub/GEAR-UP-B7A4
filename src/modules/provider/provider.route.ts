@@ -11,7 +11,7 @@ router.put("/gear/:id",auth(UserRole.PROVIDER, UserRole.ADMIN), providerControll
 router.delete("/gear/:id",auth(UserRole.PROVIDER, UserRole.ADMIN), providerController.deleteGear);
 
 // Orders
-router.get("/orders", providerController.getIncomingOrders);
+router.get("/orders",auth(UserRole.PROVIDER, UserRole.ADMIN), providerController.getIncomingOrders);
 router.patch("/orders/:id", providerController.updateOrderStatus);
 
 

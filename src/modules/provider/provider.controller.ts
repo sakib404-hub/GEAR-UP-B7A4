@@ -4,6 +4,7 @@ import { providerServices } from "./provider.service";
 import { sendResponse } from "../../utility/sendResponse";
 import status from "http-status";
 import { UserRole } from "../../../generated/prisma/enums";
+import { stat } from "node:fs";
 
 const createGear = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const payLoad = req.body;
@@ -50,7 +51,16 @@ const deleteGear = catchAsync(async (req: Request, res: Response, next: NextFunc
 });
 
 const getIncomingOrders = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const providerId = req.user?.id;
 
+    const result = await providerServices.getIncomingOrders(providerId as string);
+
+    return sendResponse(res, {
+        success : true,
+        statusCode : status.OK,
+        message : "Your Incoming Orders",
+        data : result
+    })
 });
 
 const updateOrderStatus = catchAsync(async (req: Request, res: Response, next: NextFunction) => {

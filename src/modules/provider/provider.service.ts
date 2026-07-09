@@ -68,8 +68,23 @@ const deleteGear = async (gearId : string, userId : string, isAdmin : boolean) =
 
 };
 
-const getIncomingOrders = async () => {
+const getIncomingOrders = async (providerId : string) => {
+    const orders = await prisma.rentalOrders.findMany({
+      where : {
+        gear : {
+          providerId : providerId
+        }
+      },
+      include : {
+        gear : {
+          select : {
+            providerId : true
+          }
+        }
+      }
+    });
 
+    return orders;
 };
 
 const updateOrderStatus = async () => {
