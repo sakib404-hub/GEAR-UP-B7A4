@@ -12,6 +12,7 @@ import { providerRouter } from "./modules/provider/provider.route";
 import { categoryRouter } from "./modules/category/category.route";
 import { adminRouter } from "./modules/Admin/admin.route";
 import { orderRouter } from "./modules/Orders/orders.route";
+import { paymentRouter } from "./modules/payment/payment.route";
 
 const app : Application = express();
 
@@ -47,7 +48,6 @@ app.get('/', (req : Request, res : Response)=>{
     });
 })
 
-
 //? authentication route
 app.use('/api/auth', authRouter);
 
@@ -62,6 +62,9 @@ app.use('/api/categories', categoryRouter);
 
 //? rental orders api
 app.use('/api/rentals', orderRouter);
+
+//? payment apis
+app.use('/api/payments', paymentRouter)
 
 
 //? admin route
