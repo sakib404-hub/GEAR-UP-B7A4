@@ -7,5 +7,7 @@ const router = Router();
 
 router.post('/create/:orderId',auth(UserRole.CUSTOMER, UserRole.PROVIDER, UserRole.ADMIN), paymentController.createPayment)
 
-router.post('/confirm', paymentController.handlePaymentConfirmWebHook)
+router.get('/', auth(UserRole.CUSTOMER, UserRole.PROVIDER, UserRole.ADMIN), paymentController.getUsersPaymentsHistory)
+
+router.post('/confirm', paymentController.handlePaymentConfirmWebHook);
 export const paymentRouter = router;

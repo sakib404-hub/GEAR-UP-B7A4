@@ -100,7 +100,20 @@ const handlePaymentConfirmWebHook = async (payLoad: Buffer, signature: string) =
 
 }
 
+
+const getUsersPaymentsHistory = async(userId : string)=>{
+    const result = await prisma.payment.findMany({
+        where : {
+            rentalOders : {
+                userId : userId
+            }
+        }
+    })
+    return result;
+}
+
 export const paymentServices = {
     createPayment,
-    handlePaymentConfirmWebHook
+    handlePaymentConfirmWebHook,
+    getUsersPaymentsHistory
 }
