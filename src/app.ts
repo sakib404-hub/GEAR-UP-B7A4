@@ -11,6 +11,7 @@ import { gearRouter } from "./modules/Gears/gear.route";
 import { providerRouter } from "./modules/provider/provider.route";
 import { categoryRouter } from "./modules/category/category.route";
 import { adminRouter } from "./modules/Admin/admin.route";
+import { orderRouter } from "./modules/Orders/orders.route";
 
 const app : Application = express();
 
@@ -58,6 +59,9 @@ app.use('/api/provider', providerRouter);
 
 //? category route
 app.use('/api/categories', categoryRouter);
+
+//? rental orders api
+app.use('/api/rentals', orderRouter);
 
 
 //? admin route
