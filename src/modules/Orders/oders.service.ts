@@ -60,7 +60,27 @@ const getUsersRentalOrders = async(userId : string)=>{
     return result;
 }
 
+const getOrderDetails = async(orderId : string, userId : string)=>{
+
+    const result = await prisma.rentalOrders.findUnique({
+        where : {
+            id : orderId
+        }
+    })
+
+    if(!result){
+        throw new Error("Order not found!");
+    }
+
+    if(result.userId !== userId){
+        throw new Error("Forbidden Access!");
+    }
+
+    return result;
+}
+
 export const orderServices = {
     createOrder,
-    getUsersRentalOrders
+    getUsersRentalOrders,
+    getOrderDetails
 }

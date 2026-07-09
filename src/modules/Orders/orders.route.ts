@@ -8,7 +8,9 @@ const router = Router();
 router.post('/',auth(UserRole.ADMIN, UserRole.CUSTOMER, UserRole.PROVIDER), orderController.createOrder);
 
 
-router.get('/',auth(UserRole.ADMIN, UserRole.CUSTOMER, UserRole.PROVIDER), orderController.getUsersRentalOrders )
+router.get('/',auth(UserRole.ADMIN, UserRole.CUSTOMER, UserRole.PROVIDER), orderController.getUsersRentalOrders);
+
+router.get('/:id',auth(UserRole.ADMIN, UserRole.CUSTOMER, UserRole.PROVIDER), orderController.getOrderDetails);
 
 
 
