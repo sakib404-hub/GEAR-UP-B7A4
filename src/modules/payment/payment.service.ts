@@ -112,8 +112,24 @@ const getUsersPaymentsHistory = async(userId : string)=>{
     return result;
 }
 
+const getPaymentDetails = async(paymentId : string, userId : string)=>{
+    const result = await prisma.payment.findUnique({
+        where : {
+            id : paymentId,
+            rentalOders : {
+                userId : userId
+            }
+        }
+    })
+    if(!result){
+        throw new Error(`No payment Exists with paymentId : ${paymentId} and userId : ${userId}`);
+    }
+    return result ;
+}
+
 export const paymentServices = {
     createPayment,
     handlePaymentConfirmWebHook,
-    getUsersPaymentsHistory
+    getUsersPaymentsHistory,
+    getPaymentDetails
 }

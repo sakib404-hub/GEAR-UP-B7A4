@@ -48,8 +48,23 @@ const getUsersPaymentsHistory = catchAsync(async(req : Request, res : Response, 
     })
 })
 
+const getPaymentDetails = catchAsync(async(req : Request, res : Response, next : NextFunction)=>{
+    const paymentId = req.params.id;
+    const userId = req.user?.id;
+
+    const result = await paymentServices.getPaymentDetails(paymentId as string, userId as string);
+    
+      return sendResponse(res, {
+        success : true,
+        statusCode : status.OK,
+        message : "Payment Details Retrive successfully",
+        data : result 
+    })
+})
+
 export const paymentController = {
     createPayment,
     handlePaymentConfirmWebHook,
-    getUsersPaymentsHistory
+    getUsersPaymentsHistory,
+    getPaymentDetails
 }
