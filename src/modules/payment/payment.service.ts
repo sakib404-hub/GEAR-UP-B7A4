@@ -3,6 +3,7 @@ import { OrderStatus } from "../../../generated/prisma/enums";
 import { config } from "../../config/config";
 import { prisma } from "../../lib/prisma"
 import stripe from "../../lib/stripe";
+import { handleCheckoutSessionComplete } from "./payment.utility";
 
 const createPayment = async (orderId: string, userId: string) => {
     const order = await prisma.rentalOrders.findUnique({
@@ -15,11 +16,11 @@ const createPayment = async (orderId: string, userId: string) => {
     });
 
     const user = await prisma.user.findUnique({
-        where : {
-            id : order?.userId
+        where: {
+            id: order?.userId
         },
-        select : {
-            email : true
+        select: {
+            email: true
         }
     })
 
@@ -35,7 +36,7 @@ const createPayment = async (orderId: string, userId: string) => {
 
     if (order.isPaid) {
         throw new Error(
-            
+
             "This order has already been paid."
         );
     }
@@ -49,7 +50,7 @@ const createPayment = async (orderId: string, userId: string) => {
     const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
         mode: "payment",
-        customer_email : user?.email ,
+        customer_email: user?.email,
         line_items: [
             {
                 price_data: {
@@ -74,18 +75,30 @@ const createPayment = async (orderId: string, userId: string) => {
     return session.url;
 };
 
-const handlePaymentConfirmWebHook = async(payLoad : Buffer, signature : string)=>{
-    console.log(payLoad, "This is the event before!");
+const handlePaymentConfirmWebHook = async (payLoad: Buffer, signature: string) => {
 
+    //? converting the buffer event into a valid object
     const event = stripe.webhooks.constructEvent(
         payLoad,
         signature,
         config.web_hook_secret
     );
 
-    console.log(event, "This is the event after making it an object");
+    //? handling the event
+    // Handle the event
+    switch (event.type) {
+        case 'checkout.session.completed':
+            handleCheckoutSessionComplete(event.data.object)
+            break;
+        default:
+            // console.log(`Unhandled event type ${event.type}`);
+            break;
+    }
 
-} 
+
+
+
+}
 
 export const paymentServices = {
     createPayment,
