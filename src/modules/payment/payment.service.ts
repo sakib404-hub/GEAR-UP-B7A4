@@ -74,6 +74,11 @@ const createPayment = async (orderId: string, userId: string) => {
     return session.url;
 };
 
+const handlePaymentConfirmWebHook = async(event : Buffer, signature : string)=>{
+
+} 
+
 export const paymentServices = {
-    createPayment
+    createPayment,
+    handlePaymentConfirmWebHook
 }
