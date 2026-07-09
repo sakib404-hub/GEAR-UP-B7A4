@@ -21,6 +21,11 @@ app.use(cors({
     origin : config.backEndOrigin,
     credentials : true
 }))
+
+app.use('/api/payments/confirm', express.raw({
+    type : 'application/json'
+}))
+
 app.use(express.json());
 app.use(express.urlencoded({extended : true}));
 app.use(cookieParser());

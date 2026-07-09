@@ -74,7 +74,16 @@ const createPayment = async (orderId: string, userId: string) => {
     return session.url;
 };
 
-const handlePaymentConfirmWebHook = async(event : Buffer, signature : string)=>{
+const handlePaymentConfirmWebHook = async(payLoad : Buffer, signature : string)=>{
+    console.log(payLoad, "This is the event before!");
+
+    const event = stripe.webhooks.constructEvent(
+        payLoad,
+        signature,
+        config.web_hook_secret
+    );
+
+    console.log(event, "This is the event after making it an object");
 
 } 
 

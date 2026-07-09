@@ -15,5 +15,6 @@ export const config = {
     jwt_refresh_secret : process.env.JWT_REFRESH_SECRET!,
     jwt_refresh_expires_in : process.env.JWT_REFRESH_EXPIRES_IN!,
     stripe_secret_api_key : process.env.STRIPE_SECRET_API_KEY!,
-    app_url : process.env.APP_URL!
+    app_url : process.env.APP_URL!,
+    web_hook_secret : process.env.WEB_HOOK_SECRET!
 }
