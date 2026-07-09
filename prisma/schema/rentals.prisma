@@ -12,7 +12,7 @@ model RentalOrders {
 
     payment Payment?
 
-    endDate DateTime
+    rentalDays Int
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

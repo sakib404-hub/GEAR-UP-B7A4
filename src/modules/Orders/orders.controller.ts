@@ -6,8 +6,9 @@ import { orderServices } from "./oders.service";
 
 const createOrder = catchAsync(async(req : Request, res : Response, next : NextFunction)=>{
     const payLoad = req.body;
+    const userId = req.user?.id;
 
-    const result = await orderServices.createOrder(payLoad)
+    const result = await orderServices.createOrder(payLoad, userId as string)
 
     return sendResponse(res, {
         success : true,

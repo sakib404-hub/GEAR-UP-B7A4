@@ -1,4 +1,4 @@
 export interface IPayLoad {
     gearId : string;
-    endDate : Date;
+    rentalDays : number;
 }
