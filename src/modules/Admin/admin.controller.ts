@@ -55,7 +55,14 @@ const getAllGear = catchAsync(async (req: Request, res: Response, next: NextFunc
 });
 
 const getAllRentals = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    await adminServices.getAllRentals();
+   const result = await adminServices.getAllRentals();
+
+   return sendResponse(res, {
+    success : true,
+    statusCode : status.OK,
+    message : "All rental Orders successfully Retrived!",
+    data : result
+   })
 });
 
 export const adminController = {

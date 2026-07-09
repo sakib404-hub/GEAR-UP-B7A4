@@ -51,7 +51,10 @@ const getAllGear = async() => {
     return result;
 };
 
-const getAllRentals = () => {};
+const getAllRentals = async() => {
+    const allRentalOrders = await prisma.rentalOrders.findMany();
+    return allRentalOrders;
+};
 
 export const adminServices = {
   getAllUsers,
