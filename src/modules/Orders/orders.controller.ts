@@ -18,6 +18,21 @@ const createOrder = catchAsync(async(req : Request, res : Response, next : NextF
     })
 })
 
+const getUsersRentalOrders = catchAsync(async(req : Request, res: Response, next : NextFunction )=>{
+    const userId = req.user?.id;
+
+    const result = await orderServices.getUsersRentalOrders(userId as string);
+
+    return sendResponse(res, {
+        success : true,
+        statusCode : status.OK,
+        message : "Your Orders fetched successfully",
+        data : result
+    })
+
+})
+
 export const orderController = {
-    createOrder
+    createOrder,
+    getUsersRentalOrders
 }

@@ -49,6 +49,18 @@ const createOrder = async(payLoad : IPayLoad, userId : string)=>{
     return result;
 }
 
+const getUsersRentalOrders = async(userId : string)=>{
+
+    const result = await prisma.rentalOrders.findMany({
+        where : {
+            userId
+        }
+    })
+
+    return result;
+}
+
 export const orderServices = {
-    createOrder
+    createOrder,
+    getUsersRentalOrders
 }
