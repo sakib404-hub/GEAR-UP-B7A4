@@ -41,8 +41,6 @@ const getGearDetails = async(gearId : string)=>{
     return gear;
 }
 
-
-
 export const gearServices = {
     getAllGear,
     getGearDetails,

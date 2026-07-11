@@ -19,8 +19,8 @@ const app : Application = express();
 
 //? this is for middleware
 app.use(cors({
-    origin : config.backEndOrigin,
-    credentials : true
+    // origin : config.backEndOrigin,
+    // credentials : true
 }))
 
 app.use('/api/payments/confirm', express.raw({
