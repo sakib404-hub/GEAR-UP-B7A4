@@ -105,6 +105,7 @@ const updateOrderStatus = async (
       "Invalid order status. Allowed values are: pending, confirmed, picked_up, returned, cancelled."
     );
   }
+
   const order = await prisma.rentalOrders.findUnique({
     where: {
       id: orderId
@@ -135,6 +136,23 @@ const updateOrderStatus = async (
 
   if (order.status === OrderStatus.RETURNED) {
     throw new Error("Returned orders cannot be updated.");
+  }
+  
+  if(normalizedStatus === OrderStatus.RETURNED){
+    await prisma.rentalOrders.update({
+      where : {
+        id : orderId
+      },
+      data : {
+        gear : {
+          update : {
+            stockQuantity :{
+              increment : 1
+            }
+          }
+        }
+      }
+    })
   }
 
   const updatedOrder = await prisma.rentalOrders.update({
