@@ -1,4 +1,4 @@
 export interface IreviewPayLoad {
-    comment ? : string;
-    rating ? : string;
+    comment  : string;
+    rating  : number;
 }
