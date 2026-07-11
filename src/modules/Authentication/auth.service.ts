@@ -3,12 +3,13 @@ import { config } from "../../config/config";
 import { prisma } from "../../lib/prisma";
 import { ILoginPayLoad, IRegisterPayLoad } from "./auth.interface";
 import bcrypt from "bcrypt"
-import jwt, { SignOptions } from "jsonwebtoken" 
+import  { SignOptions } from "jsonwebtoken" 
 import { generateToken } from "../../utility/jwtUtility";
+import validator from "validator"
 
 const registerUser = async (payload: IRegisterPayLoad) => {
 
-    const {email} = payload;
+    const {email, role} = payload;
 
     const isExists = await prisma.user.findUnique({
         where : {
@@ -23,8 +24,28 @@ const registerUser = async (payload: IRegisterPayLoad) => {
         throw new Error("User with this Email already exists!");
     }
 
+    if(!validator.isEmail(payload.email)){
+        throw new Error("Invalid Email Address!");
+    }
+
+    let userRole  : UserRole = UserRole.CUSTOMER;
+
+    if(role){
+        switch(role.toLowerCase()){
+            case "customer" : 
+                userRole = UserRole.CUSTOMER;
+                break;
+            case "provider" :
+                userRole = UserRole.PROVIDER;
+                break;
+            default : 
+                throw new Error("Invalid role, only CUSTOMER and PROVIDER are allowed!");
+        }
+    }
+
     const hashedPassword = await bcrypt.hash(payload.password, Number(config.bcrypt_salt_round));
     payload.password = hashedPassword;
+    payload.role = userRole;
 
     const result = await prisma.user.create({
         data : {
