@@ -126,6 +126,17 @@ const updateOrderStatus = async (
     throw new Error("Access Denied!");
   }
 
+  if (
+    normalizedStatus === OrderStatus.RETURNED &&
+    order.status !== OrderStatus.PICKED_UP
+  ) {
+    throw new Error("Only picked up orders can be marked as returned.");
+  }
+
+  if (order.status === OrderStatus.RETURNED) {
+    throw new Error("Returned orders cannot be updated.");
+  }
+
   const updatedOrder = await prisma.rentalOrders.update({
     where: {
       id: orderId,
@@ -134,7 +145,7 @@ const updateOrderStatus = async (
       }
     },
     data: {
-      status : normalizedStatus
+      status: normalizedStatus
     }
   })
 
