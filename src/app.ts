@@ -13,6 +13,7 @@ import { categoryRouter } from "./modules/category/category.route";
 import { adminRouter } from "./modules/Admin/admin.route";
 import { orderRouter } from "./modules/Orders/orders.route";
 import { paymentRouter } from "./modules/payment/payment.route";
+import { reviewRouter } from "./modules/reviews/review.route";
 
 const app : Application = express();
 
@@ -75,7 +76,8 @@ app.use('/api/payments', paymentRouter)
 //? admin route
 app.use('/api/admin', adminRouter);
 
-
+//? review route
+app.use('/api/reviews', reviewRouter);
 
 //? if any of the above route is not found
 app.use(notFound);
