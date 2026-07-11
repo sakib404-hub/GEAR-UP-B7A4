@@ -10,6 +10,13 @@ const getAllGear = async(query : IGearQuery)=>{
                     name : true,
                     email : true
                 }
+            },
+            reviews : {
+                select : {
+                    comment : true,
+                    rating : true,
+                    userId : true
+                }
             }
         }
     });
