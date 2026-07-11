@@ -54,6 +54,15 @@ const getUsersRentalOrders = async(userId : string)=>{
     const result = await prisma.rentalOrders.findMany({
         where : {
             userId
+        },
+        include : {
+            provider : {
+                select : {
+                    id : true,
+                    name : true,
+                    email : true
+                }
+            }
         }
     })
 

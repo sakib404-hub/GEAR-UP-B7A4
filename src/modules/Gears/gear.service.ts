@@ -1,7 +1,18 @@
 import { prisma } from "../../lib/prisma"
+import { IGearQuery } from "./gear.interface";
 
-const getAllGear = async()=>{
-    const result = await prisma.gearItems.findMany();
+const getAllGear = async(query : IGearQuery)=>{
+    const result = await prisma.gearItems.findMany({
+        include : {
+            provider : {
+                select : {
+                    id : true,
+                    name : true,
+                    email : true
+                }
+            }
+        }
+    });
     return result;
 }
 

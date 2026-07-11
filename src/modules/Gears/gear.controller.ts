@@ -5,7 +5,9 @@ import { sendResponse } from "../../utility/sendResponse";
 import status from "http-status";
 
 const getAllGear = catchAsync(async(req : Request, res : Response, next : NextFunction)=>{
-    const result = await gearServices.getAllGear();
+    const query = req.query;
+    
+    const result = await gearServices.getAllGear(query);
 
     return sendResponse(res, {
         success : true,
