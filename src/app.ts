@@ -32,8 +32,6 @@ app.use(express.urlencoded({extended : true}));
 app.use(cookieParser());
 
 
-
-
 //? this is the root route
 app.get('/', (req : Request, res : Response)=>{
     return res.status(status.OK).json({
