@@ -42,7 +42,7 @@ const updateGear = async (payLoad: IUpdateGear, gearId: string, userId: string, 
   return updatedGear;
 };
 
-const deleteGear = async (gearId : string, userId : string, isAdmin : boolean) => {
+const deleteGear = async (gearId: string, userId: string, isAdmin: boolean) => {
   const gear = await prisma.gearItems.findUnique({
     where: {
       id: gearId
@@ -61,63 +61,80 @@ const deleteGear = async (gearId : string, userId : string, isAdmin : boolean) =
   }
 
   await prisma.gearItems.delete({
-    where : {
-      id : gearId
+    where: {
+      id: gearId
     }
   })
   return null;
 
 };
 
-const getIncomingOrders = async (providerId : string) => {
-    const orders = await prisma.rentalOrders.findMany({
-      where : {
-        gear : {
-          providerId : providerId
-        }
-      },
-    });
+const getIncomingOrders = async (providerId: string) => {
+  const orders = await prisma.rentalOrders.findMany({
+    where: {
+      gear: {
+        providerId: providerId
+      }
+    },
+  });
 
-    return orders;
+  return orders;
 };
 
 const updateOrderStatus = async (
-  providerId : string,
-  orderId : string,
-  status : OrderStatus,
-  isAdmin : boolean
+  providerId: string,
+  orderId: string,
+  status: OrderStatus,
+  isAdmin: boolean
 ) => {
 
+  let normalizedStatus: OrderStatus;
+
+  if (status.toLowerCase() === "pending") {
+    normalizedStatus = OrderStatus.PENDING;
+  } else if (status.toLowerCase() === "confirmed") {
+    normalizedStatus = OrderStatus.CONFIRMED;
+  } else if (status.toLowerCase() === "picked_up") {
+    normalizedStatus = OrderStatus.PICKED_UP;
+  } else if (status.toLowerCase() === "returned") {
+    normalizedStatus = OrderStatus.RETURNED;
+  } else if (status.toLowerCase() === "cancelled") {
+    normalizedStatus = OrderStatus.CANCELLED;
+  } else {
+    throw new Error(
+      "Invalid order status. Allowed values are: pending, confirmed, picked_up, returned, cancelled."
+    );
+  }
   const order = await prisma.rentalOrders.findUnique({
-    where : {
-      id : orderId
+    where: {
+      id: orderId
     },
-    include : {
-      gear : {
-        select : {
-          providerId : true
+    include: {
+      gear: {
+        select: {
+          providerId: true
         }
       }
     }
   })
 
-  if(!order){
+  if (!order) {
     throw new Error("Order does not exist!");
   }
 
-  if(order.gear.providerId !== providerId && !isAdmin){
+  if (order.gear.providerId !== providerId && !isAdmin) {
     throw new Error("Access Denied!");
   }
 
   const updatedOrder = await prisma.rentalOrders.update({
-    where : {
-      id : orderId,
-      gear : {
+    where: {
+      id: orderId,
+      gear: {
         providerId
       }
     },
-    data : {
-      status
+    data: {
+      status : normalizedStatus
     }
   })
 
