@@ -33,24 +33,32 @@ app.use(cookieParser());
 
 
 //? this is the root route
-app.get('/', (req : Request, res : Response)=>{
-    return res.status(status.OK).json({
-        success : true,
-        statusCode : status.OK,
-        message : "This is the Root Route!",
-        author: {
-            name: "Md. Shakib Hossen",
-            role: "Backend Developer",
-            github: "https://github.com/sakib404-hub",
-            email: "akibhossainsakib7011gamil.com",
-        },
-        server : {
-            name : "My API",
-            version : "1.0.0",
-            uptime : `${Math.floor(process.uptime())} seconds`
-        }
-    });
-})
+app.get("/", (req: Request, res: Response) => {
+  const uptime = Math.floor(process.uptime());
+
+  const months = Math.floor(uptime / (30 * 24 * 60 * 60));
+  const days = Math.floor((uptime % (30 * 24 * 60 * 60)) / (24 * 60 * 60));
+  const hours = Math.floor((uptime % (24 * 60 * 60)) / (60 * 60));
+  const minutes = Math.floor((uptime % (60 * 60)) / 60);
+  const seconds = uptime % 60;
+
+  return res.status(status.OK).json({
+    success: true,
+    statusCode: status.OK,
+    message: "This is the Root Route!",
+    author: {
+      name: "Md. Shakib Hossen",
+      role: "Backend Developer",
+      github: "https://github.com/sakib404-hub",
+      email: "akibhossainsakib7011gamil.com",
+    },
+    server: {
+      name: "My API",
+      version: "1.0.0",
+      uptime: `${months} month(s), ${days} day(s), ${hours} hour(s), ${minutes} minute(s), ${seconds} second(s)`,
+    },
+  });
+});
 
 //? authentication route
 app.use('/api/auth', authRouter);
