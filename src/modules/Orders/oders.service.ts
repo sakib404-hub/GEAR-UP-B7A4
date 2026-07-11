@@ -56,13 +56,17 @@ const getUsersRentalOrders = async(userId : string)=>{
             userId
         },
         include : {
-            provider : {
-                select : {
+           gear : {
+            select : {
+                provider : {
+                   select : {
                     id : true,
                     name : true,
                     email : true
+                   }
                 }
             }
+           }
         }
     })
 
@@ -74,6 +78,19 @@ const getOrderDetails = async(orderId : string, userId : string)=>{
     const result = await prisma.rentalOrders.findUnique({
         where : {
             id : orderId
+        },
+         include : {
+           gear : {
+            select : {
+                provider : {
+                   select : {
+                    id : true,
+                    name : true,
+                    email : true
+                   }
+                }
+            }
+           }
         }
     })
 
