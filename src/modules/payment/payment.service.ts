@@ -116,13 +116,25 @@ const getPaymentDetails = async(paymentId : string, userId : string)=>{
     const result = await prisma.payment.findUnique({
         where : {
             id : paymentId,
+            // rentalOders : {
+            //     userId : userId
+            // }
+        },
+        include : {
             rentalOders : {
-                userId : userId
+                select : {
+                    userId : true
+                }
             }
         }
     })
+
+    if(userId !== result?.rentalOders.userId){
+        throw new Error("Forbiden Access!");
+    }
+
     if(!result){
-        throw new Error(`No payment Exists with paymentId : ${paymentId} and userId : ${userId}`);
+        throw new Error(`No payment Exists with paymentId : ${paymentId}`);
     }
     return result ;
 }
