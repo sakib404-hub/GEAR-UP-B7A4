@@ -10,7 +10,7 @@ router.get("/users",auth(UserRole.ADMIN), adminController.getAllUsers);
 router.patch("/users/:id",auth(UserRole.ADMIN), adminController.updateUserStatus);
 
 // Gear Management
-router.get("/gear", adminController.getAllGear);
+router.get("/gear",auth(UserRole.ADMIN), adminController.getAllGear);
 
 // Rental Management
 router.get("/rentals",auth(UserRole.ADMIN), adminController.getAllRentals);

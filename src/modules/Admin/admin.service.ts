@@ -47,7 +47,17 @@ const updateUserStatus = async(payLoad : UserStatus, userId : string) => {
 };
 
 const getAllGear = async() => {
-    const result = await prisma.gearItems.findMany();
+    const result = await prisma.gearItems.findMany({
+        include : {
+            reviews :{
+                select : {
+                    id : true,
+                    comment : true,
+                    title : true
+                }
+            }
+        }
+    });
     return result;
 };
 
