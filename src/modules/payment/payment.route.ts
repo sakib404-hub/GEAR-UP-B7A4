@@ -12,4 +12,5 @@ router.get('/', auth(UserRole.CUSTOMER, UserRole.PROVIDER, UserRole.ADMIN), paym
 router.get('/:id',auth(UserRole.CUSTOMER, UserRole.PROVIDER, UserRole.ADMIN), paymentController.getPaymentDetails )
 
 router.post('/confirm', paymentController.handlePaymentConfirmWebHook);
+
 export const paymentRouter = router;

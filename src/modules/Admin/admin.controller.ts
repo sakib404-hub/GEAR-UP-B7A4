@@ -65,9 +65,20 @@ const getAllRentals = catchAsync(async (req: Request, res: Response, next: NextF
    })
 });
 
+const adminSummery = catchAsync(async(req : Request, res : Response, next : NextFunction)=>{
+    const result = await adminServices.getAdminSummery();
+    return sendResponse(res, {
+        success : true,
+        statusCode : status.OK,
+        message : "Information fetched successfully.",
+        data : result
+    })
+})
+
 export const adminController = {
     getAllUsers,
     updateUserStatus,
     getAllGear,
     getAllRentals,
+    adminSummery
 };

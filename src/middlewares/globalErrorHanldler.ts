@@ -41,7 +41,7 @@ const globalErrorHandler = (err: any, req: Request, res: Response, next: NextFun
         success : false,
         statusCode : statusCode || status.INTERNAL_SERVER_ERROR,
         errorName : errorName,
-        messagge : errorMessage,
+        message : errorMessage,
         error : err.stack
     })
 

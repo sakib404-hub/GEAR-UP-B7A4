@@ -137,17 +137,17 @@ const updateOrderStatus = async (
   if (order.status === OrderStatus.RETURNED) {
     throw new Error("Returned orders cannot be updated.");
   }
-  
-  if(normalizedStatus === OrderStatus.RETURNED){
+
+  if (normalizedStatus === OrderStatus.RETURNED) {
     await prisma.rentalOrders.update({
-      where : {
-        id : orderId
+      where: {
+        id: orderId
       },
-      data : {
-        gear : {
-          update : {
-            stockQuantity :{
-              increment : 1
+      data: {
+        gear: {
+          update: {
+            stockQuantity: {
+              increment: 1
             }
           }
         }
