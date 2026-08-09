@@ -9,7 +9,7 @@ const router  = Router();
 router.post("/gear",auth(UserRole.PROVIDER, UserRole.ADMIN), providerController.createGear);
 router.put("/gear/:id",auth(UserRole.PROVIDER, UserRole.ADMIN), providerController.updateGear);
 router.delete("/gear/:id",auth(UserRole.PROVIDER, UserRole.ADMIN), providerController.deleteGear);
-
+router.get('/gear', auth(UserRole.PROVIDER), providerController.getProviderGears)
 // Orders
 router.get("/orders",auth(UserRole.PROVIDER), providerController.getIncomingOrders);
 router.patch("/orders/:id",auth(UserRole.PROVIDER, UserRole.ADMIN), providerController.updateOrderStatus);

@@ -171,10 +171,29 @@ const updateOrderStatus = async (
 
 };
 
+
+const getProviderGears = async(providerId : string)=>{
+  const result = await prisma.gearItems.findMany({
+    where : {
+      providerId : providerId
+    },
+    include : {
+      provider : {
+        omit : {
+          password : true
+        }
+      }
+    }
+  })
+
+  return result;
+}
+
 export const providerServices = {
   createGear,
   updateGear,
   deleteGear,
   getIncomingOrders,
   updateOrderStatus,
+  getProviderGears
 };

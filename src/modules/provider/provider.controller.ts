@@ -83,10 +83,24 @@ const updateOrderStatus = catchAsync(async (req: Request, res: Response, next: N
     })
 });
 
+const getProviderGears = catchAsync(async(req : Request, res : Response, next : NextFunction)=>{
+    const userId = req.user?.id;
+
+    const result = await providerServices.getProviderGears(userId as string);
+
+    return sendResponse(res, {
+        success : true,
+        statusCode : status.OK,
+        message : "Provider gear Fetched successfully",
+        data : result
+    })
+})
+
 export const providerController = {
     createGear,
     updateGear,
     deleteGear,
     getIncomingOrders,
     updateOrderStatus,
+    getProviderGears
 };
