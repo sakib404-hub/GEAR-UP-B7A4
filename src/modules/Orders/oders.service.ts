@@ -1,112 +1,130 @@
 import { GearItemStatus } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
-import { IPayLoad } from "./orders.interface"
+import { IPayLoad } from "./orders.interface";
 
-const createOrder = async(payLoad : IPayLoad, userId : string)=>{
-    const {gearId, rentalDays} = payLoad;
+const createOrder = async (payLoad: IPayLoad, userId: string) => {
+  const { gearId, rentalDays } = payLoad;
 
-    //? validating rental Days
-    if(rentalDays <= 0){
-         throw new Error("Rental days must be at least 1.");
-    }
-    if(rentalDays > 14){
-        throw new Error(`You can not rent gear for ${rentalDays} days`);
-    }
+  // Validate rental days
+  if (rentalDays <= 0) {
+    throw new Error("Rental days must be at least 1.");
+  }
 
-    //? validating gears
-    const gear = await prisma.gearItems.findUnique({
-        where : {
-            id : gearId
-        }
-    })
+  if (rentalDays >= 14) {
+    throw new Error(
+      `You cannot rent gear for ${rentalDays} days. Maximum rental duration is 13 days.`
+    );
+  }
 
-    if(!gear){
-        throw new Error("Gear Not found!");
-    }
+  // Find gear
+  const gear = await prisma.gearItems.findUnique({
+    where: {
+      id: gearId,
+    },
+  });
 
-    if(gear?.stockQuantity <= 0){
-        throw new Error("Out of stock");
-    }
+  if (!gear) {
+    throw new Error("Gear not found!");
+  }
 
-    if(gear.status === GearItemStatus.UNAVAILABLE){
-         throw new Error("This gear is currently unavailable.");
-    }
+  if (gear.stockQuantity <= 0) {
+    throw new Error("Out of stock");
+  }
 
-    if(gear.providerId === userId){
-         throw new Error("You cannot rent your own gear.");
-    }
+  if (gear.status === GearItemStatus.UNAVAILABLE) {
+    throw new Error("This gear is currently unavailable.");
+  }
 
-    const totalAmount = rentalDays * gear.pricePerDay;
+  if (gear.providerId === userId) {
+    throw new Error("You cannot rent your own gear.");
+  }
 
-    const result = await prisma.rentalOrders.create({
-        data : {
-            ...payLoad,
-            userId,
-            totalAmount
-        }
-    })
+  const totalAmount = rentalDays * gear.pricePerDay;
 
-    return result;
-}
+  const result = await prisma.$transaction(async (tx) => {
+    // Create order
+    const order = await tx.rentalOrders.create({
+      data: {
+        ...payLoad,
+        userId,
+        totalAmount,
+      },
+    });
 
-const getUsersRentalOrders = async(userId : string)=>{
-
-    const result = await prisma.rentalOrders.findMany({
-        where : {
-            userId
+    // Decrease stock
+    await tx.gearItems.update({
+      where: {
+        id: gearId,
+      },
+      data: {
+        stockQuantity: {
+          decrement: 1,
         },
-        include : {
-           gear : {
-            select : {
-                provider : {
-                   select : {
-                    id : true,
-                    name : true,
-                    email : true
-                   }
-                }
-            }
-           }
-        }
-    })
+      },
+    });
 
-    return result;
-}
+    return order;
+  });
 
-const getOrderDetails = async(orderId : string, userId : string)=>{
+  return result;
+};
 
-    const result = await prisma.rentalOrders.findUnique({
-        where : {
-            id : orderId
+const getUsersRentalOrders = async (userId: string) => {
+  const result = await prisma.rentalOrders.findMany({
+    where: {
+      userId,
+    },
+    include: {
+      gear: {
+        select: {
+          provider: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
         },
-         include : {
-           gear : {
-            select : {
-                provider : {
-                   select : {
-                    id : true,
-                    name : true,
-                    email : true
-                   }
-                }
-            }
-           }
-        }
-    })
+      },
+    },
+  });
 
-    if(!result){
-        throw new Error("Order not found!");
-    }
+  return result;
+};
 
-    if(result.userId !== userId){
-        throw new Error("Forbidden Access!");
-    }
+const getOrderDetails = async (orderId: string, userId: string) => {
+  const result = await prisma.rentalOrders.findUnique({
+    where: {
+      id: orderId,
+    },
+    include: {
+      gear: {
+        select: {
+          provider: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+        },
+      },
+    },
+  });
 
-    return result;
-}
+  if (!result) {
+    throw new Error("Order not found!");
+  }
+
+  if (result.userId !== userId) {
+    throw new Error("Forbidden Access!");
+  }
+
+  return result;
+};
 
 export const orderServices = {
-    createOrder,
-    getUsersRentalOrders,
-    getOrderDetails
-}
+  createOrder,
+  getUsersRentalOrders,
+  getOrderDetails,
+};

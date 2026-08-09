@@ -6,7 +6,7 @@ import { UserRole } from "../../../generated/prisma/enums";
 const router = Router();
 
 //? summery table
-router.get('/summery', auth(UserRole.ADMIN), adminController.adminSummery)
+router.get('/summary', auth(UserRole.ADMIN), adminController.adminSummery)
 
 // User Management
 router.get("/users",auth(UserRole.ADMIN), adminController.getAllUsers);
