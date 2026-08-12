@@ -96,11 +96,26 @@ const getProviderGears = catchAsync(async(req : Request, res : Response, next : 
     })
 })
 
+const getProviderSummary = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const providerId = req.user?.id;
+
+    const result = await providerServices.getProviderSummary(providerId as string);
+
+    res.status(200).json({
+      success: true,
+      message: "Provider summary retrieved successfully",
+      data: result,
+    });
+  }
+);
+
 export const providerController = {
     createGear,
     updateGear,
     deleteGear,
     getIncomingOrders,
     updateOrderStatus,
-    getProviderGears
+    getProviderGears,
+    getProviderSummary
 };

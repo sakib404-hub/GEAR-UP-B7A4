@@ -29,4 +29,8 @@ router.get("/orders",auth(UserRole.PROVIDER), providerController.getIncomingOrde
 router.patch("/orders/:id",auth(UserRole.PROVIDER, UserRole.ADMIN), providerController.updateOrderStatus);
 
 
+//? summary 
+router.get('/summary', providerController.getProviderSummary)
+
+
 export const providerRouter = router;

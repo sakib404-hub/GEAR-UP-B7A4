@@ -192,11 +192,145 @@ const getProviderGears = async(providerId : string)=>{
   return result;
 }
 
+const getProviderSummary = async (providerId: string) => {
+  const [
+    totalGears,
+    availableGears,
+    unavailableGears,
+    totalOrders,
+    pendingOrders,
+    confirmedOrders,
+    pickedUpOrders,
+    returnedOrders,
+    cancelledOrders,
+    totalEarnings,
+  ] = await Promise.all([
+    // Total gears
+    prisma.gearItems.count({
+      where: {
+        providerId,
+      },
+    }),
+
+    // Available gears
+    prisma.gearItems.count({
+      where: {
+        providerId,
+        status: "AVAILABLE",
+      },
+    }),
+
+    // Unavailable gears
+    prisma.gearItems.count({
+      where: {
+        providerId,
+        status: "UNAVAILABLE",
+      },
+    }),
+
+    // Total rental orders
+    prisma.rentalOrders.count({
+      where: {
+        gear: {
+          providerId,
+        },
+      },
+    }),
+
+    // Pending orders
+    prisma.rentalOrders.count({
+      where: {
+        gear: {
+          providerId,
+        },
+        status: OrderStatus.PENDING,
+      },
+    }),
+
+    // Confirmed orders
+    prisma.rentalOrders.count({
+      where: {
+        gear: {
+          providerId,
+        },
+        status: OrderStatus.CONFIRMED,
+      },
+    }),
+
+    // Picked up / active rentals
+    prisma.rentalOrders.count({
+      where: {
+        gear: {
+          providerId,
+        },
+        status: OrderStatus.PICKED_UP,
+      },
+    }),
+
+    // Returned / completed rentals
+    prisma.rentalOrders.count({
+      where: {
+        gear: {
+          providerId,
+        },
+        status: OrderStatus.RETURNED,
+      },
+    }),
+
+    // Cancelled orders
+    prisma.rentalOrders.count({
+      where: {
+        gear: {
+          providerId,
+        },
+        status: OrderStatus.CANCELLED,
+      },
+    }),
+
+    // Total earnings
+    prisma.rentalOrders.aggregate({
+      where: {
+        gear: {
+          providerId,
+        },
+        status: {
+          not: OrderStatus.CANCELLED,
+        },
+      },
+      _sum: {
+        totalAmount: true,
+      },
+    }),
+  ]);
+
+  return {
+    gears: {
+      total: totalGears,
+      available: availableGears,
+      unavailable: unavailableGears,
+    },
+
+    orders: {
+      total: totalOrders,
+      pending: pendingOrders,
+      confirmed: confirmedOrders,
+      pickedUp: pickedUpOrders,
+      returned: returnedOrders,
+      cancelled: cancelledOrders,
+    },
+
+    earnings: {
+      total: totalEarnings._sum.totalAmount ?? 0,
+    },
+  };
+};
+
 export const providerServices = {
   createGear,
   updateGear,
   deleteGear,
   getIncomingOrders,
   updateOrderStatus,
-  getProviderGears
+  getProviderGears,
+  getProviderSummary
 };
