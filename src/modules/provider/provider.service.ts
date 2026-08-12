@@ -76,6 +76,9 @@ const getIncomingOrders = async (providerId: string) => {
         providerId: providerId
       }
     },
+    include : {
+      gear : true
+    }
   });
 
   return orders;
