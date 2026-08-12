@@ -1,5 +1,6 @@
 import { OrderStatus } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
+import { UpdatePayLoad } from "./user.interface";
 
 const getUserSummary = async (userId: string) => {
   const [
@@ -80,6 +81,28 @@ const getUserSummary = async (userId: string) => {
   };
 };
 
+const updateUserInformation = async (
+  userId: string,
+  payLoad: UpdatePayLoad
+) => {
+  const updatedUser = await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      name: payLoad.name,
+      phone: payLoad.phone,
+      address: payLoad.address,
+    },
+    omit : {
+      password : true
+    },
+  });
+
+  return updatedUser;
+};
+
 export const UserServices = {
   getUserSummary,
+  updateUserInformation
 };

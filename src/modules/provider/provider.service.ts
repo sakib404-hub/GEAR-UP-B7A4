@@ -208,7 +208,7 @@ const getProviderSummary = async (providerId: string) => {
     // Total gears
     prisma.gearItems.count({
       where: {
-        providerId,
+        providerId : providerId,
       },
     }),
 
