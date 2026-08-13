@@ -1,4 +1,4 @@
-import { GearItemStatus } from "../../../generated/prisma/enums";
+import { GearItemStatus, OrderStatus } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 import { IPayLoad } from "./orders.interface";
 
@@ -73,6 +73,9 @@ const getUsersRentalOrders = async (userId: string) => {
   const result = await prisma.rentalOrders.findMany({
     where: {
       userId,
+      status : {
+        not : OrderStatus.RETURNED
+      }
     },
     include: {
       gear: {
@@ -91,6 +94,30 @@ const getUsersRentalOrders = async (userId: string) => {
 
   return result;
 };
+
+const getUsersCompletedOrders = async(userId : string)=>{
+  const result = await prisma.rentalOrders.findMany({
+    where: {
+      userId,
+      status : OrderStatus.RETURNED
+    },
+    include: {
+      gear: {
+        select: {
+          provider: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  return result;
+}
 
 const getOrderDetails = async (orderId: string, userId: string) => {
   const result = await prisma.rentalOrders.findUnique({
@@ -127,4 +154,5 @@ export const orderServices = {
   createOrder,
   getUsersRentalOrders,
   getOrderDetails,
+  getUsersCompletedOrders
 };
