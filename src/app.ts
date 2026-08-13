@@ -15,6 +15,7 @@ import { orderRouter } from "./modules/Orders/orders.route";
 import { paymentRouter } from "./modules/payment/payment.route";
 import { reviewRouter } from "./modules/reviews/review.route";
 import { userRouter } from "./modules/users/user.route";
+import { paymentController } from "./modules/payment/payment.controller";
 
 const app : Application = express();
 
@@ -24,9 +25,13 @@ app.use(cors({
     credentials : true
 }))
 
-app.use('/api/payments/confirm', express.raw({
-    type : 'application/json'
-}))
+// Stripe webhook
+app.post(
+  "/api/payments/confirm",
+  express.raw({ type: "application/json" }),
+  paymentController.handlePaymentConfirmWebHook
+);
+
 
 app.use(express.json());
 app.use(express.urlencoded({extended : true}));

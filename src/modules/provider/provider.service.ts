@@ -6,20 +6,25 @@ const createGear = async (payLoad: ICreateGear, providerId: string) => {
   const result = await prisma.gearItems.create({
     data: {
       ...payLoad,
-      providerId
-    }
-  })
+      providerId,
+    },
+  });
   return result;
 };
 
-const updateGear = async (payLoad: IUpdateGear, gearId: string, userId: string, isAdmin: boolean) => {
+const updateGear = async (
+  payLoad: IUpdateGear,
+  gearId: string,
+  userId: string,
+  isAdmin: boolean
+) => {
   const gear = await prisma.gearItems.findUnique({
     where: {
-      id: gearId
+      id: gearId,
     },
     select: {
-      providerId: true
-    }
+      providerId: true,
+    },
   });
 
   if (!gear) {
@@ -32,12 +37,12 @@ const updateGear = async (payLoad: IUpdateGear, gearId: string, userId: string, 
 
   const updatedGear = await prisma.gearItems.update({
     where: {
-      id: gearId
+      id: gearId,
     },
     data: {
-      ...payLoad
-    }
-  })
+      ...payLoad,
+    },
+  });
 
   return updatedGear;
 };
@@ -45,11 +50,11 @@ const updateGear = async (payLoad: IUpdateGear, gearId: string, userId: string, 
 const deleteGear = async (gearId: string, userId: string, isAdmin: boolean) => {
   const gear = await prisma.gearItems.findUnique({
     where: {
-      id: gearId
+      id: gearId,
     },
     select: {
-      providerId: true
-    }
+      providerId: true,
+    },
   });
 
   if (!gear) {
@@ -62,27 +67,51 @@ const deleteGear = async (gearId: string, userId: string, isAdmin: boolean) => {
 
   await prisma.gearItems.delete({
     where: {
-      id: gearId
-    }
-  })
+      id: gearId,
+    },
+  });
   return null;
-
 };
 
 const getIncomingOrders = async (providerId: string) => {
   const orders = await prisma.rentalOrders.findMany({
     where: {
+      status: {
+        not: OrderStatus.RETURNED,
+      },
       gear: {
-        providerId: providerId
-      }
+        providerId,
+      },
     },
-    include : {
-      gear : true
-    }
+    include: {
+      gear: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
 
   return orders;
 };
+
+const getCompletedOrders = async(providerId : string)=>{
+   const orders = await prisma.rentalOrders.findMany({
+    where: {
+      status:OrderStatus.RETURNED,
+      gear: {
+        providerId,
+      },
+    },
+    include: {
+      gear: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  
+  return orders;
+}
 
 const updateOrderStatus = async (
   providerId: string,
@@ -90,7 +119,6 @@ const updateOrderStatus = async (
   status: OrderStatus,
   isAdmin: boolean
 ) => {
-
   let normalizedStatus: OrderStatus;
 
   if (status.toLowerCase() === "pending") {
@@ -111,16 +139,16 @@ const updateOrderStatus = async (
 
   const order = await prisma.rentalOrders.findUnique({
     where: {
-      id: orderId
+      id: orderId,
     },
     include: {
       gear: {
         select: {
-          providerId: true
-        }
-      }
-    }
-  })
+          providerId: true,
+        },
+      },
+    },
+  });
 
   if (!order) {
     throw new Error("Order does not exist!");
@@ -144,53 +172,51 @@ const updateOrderStatus = async (
   if (normalizedStatus === OrderStatus.RETURNED) {
     await prisma.rentalOrders.update({
       where: {
-        id: orderId
+        id: orderId,
       },
       data: {
         gear: {
           update: {
             stockQuantity: {
-              increment: 1
-            }
-          }
-        }
-      }
-    })
+              increment: 1,
+            },
+          },
+        },
+      },
+    });
   }
 
   const updatedOrder = await prisma.rentalOrders.update({
     where: {
       id: orderId,
       gear: {
-        providerId
-      }
+        providerId,
+      },
     },
     data: {
-      status: normalizedStatus
-    }
-  })
+      status: normalizedStatus,
+    },
+  });
 
   return updatedOrder;
-
 };
 
-
-const getProviderGears = async(providerId : string)=>{
+const getProviderGears = async (providerId: string) => {
   const result = await prisma.gearItems.findMany({
-    where : {
-      providerId : providerId
+    where: {
+      providerId: providerId,
     },
-    include : {
-      provider : {
-        omit : {
-          password : true
-        }
-      }
-    }
-  })
+    include: {
+      provider: {
+        omit: {
+          password: true,
+        },
+      },
+    },
+  });
 
   return result;
-}
+};
 
 const getProviderSummary = async (providerId: string) => {
   const [
@@ -208,7 +234,7 @@ const getProviderSummary = async (providerId: string) => {
     // Total gears
     prisma.gearItems.count({
       where: {
-        providerId : providerId,
+        providerId: providerId,
       },
     }),
 
@@ -332,5 +358,6 @@ export const providerServices = {
   getIncomingOrders,
   updateOrderStatus,
   getProviderGears,
-  getProviderSummary
+  getProviderSummary,
+  getCompletedOrders
 };

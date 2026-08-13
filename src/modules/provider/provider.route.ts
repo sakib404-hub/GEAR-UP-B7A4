@@ -18,6 +18,8 @@ router.delete("/gear/:id",auth(UserRole.PROVIDER, UserRole.ADMIN), providerContr
 //? done
 router.get('/gear', auth(UserRole.PROVIDER), providerController.getProviderGears)
 
+//? completed orders
+router.get('/completed', auth(UserRole.PROVIDER), providerController.getCompletedOrders)
 
 // Orders
 

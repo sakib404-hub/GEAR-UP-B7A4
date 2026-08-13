@@ -20,20 +20,32 @@ const createPayment = catchAsync(async (req: Request, res: Response, next: NextF
     })
 })
 
-const handlePaymentConfirmWebHook = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const event = req.body as Buffer;
-    const signature = req.headers['stripe-signature'];
+const handlePaymentConfirmWebHook = catchAsync(
+  async (req: Request, res: Response) => {
+    const signature = req.headers["stripe-signature"];
 
+    if (!signature || Array.isArray(signature)) {
+      res.status(400).json({
+        success: false,
+        message: "Missing Stripe signature",
+      });
+      return;
+    }
 
-    const result = await paymentServices.handlePaymentConfirmWebHook(event, signature as string);
+    const result =
+      await paymentServices.handlePaymentConfirmWebHook(
+        req.body as Buffer,
+        signature
+      );
 
     sendResponse(res, {
-        success: true,
-        statusCode: status.OK,
-        message: "Web Hook triggered successfully!",
-        data: result
-    })
-})
+      success: true,
+      statusCode: status.OK,
+      message: "Webhook triggered successfully!",
+      data: result,
+    });
+  }
+);
 
 const getUsersPaymentsHistory = catchAsync(async(req : Request, res : Response, next : NextFunction)=>{
     const userId = req.user?.id;

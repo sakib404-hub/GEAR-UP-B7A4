@@ -62,6 +62,19 @@ const getIncomingOrders = catchAsync(async (req: Request, res: Response, next: N
     })
 });
 
+const getCompletedOrders = catchAsync(async(req : Request, res : Response, next : NextFunction)=>{
+    const userId = req.user?.id;
+
+    const result = await providerServices.getCompletedOrders(userId as string);
+
+    return sendResponse(res, {
+        success : true,
+        statusCode : status.OK,
+        message : "Complted Order fetched successfully",
+        data : result
+    })
+})
+
 const updateOrderStatus = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const providerId = req.user?.id;
     const orderId = req.params.id;
@@ -117,5 +130,6 @@ export const providerController = {
     getIncomingOrders,
     updateOrderStatus,
     getProviderGears,
-    getProviderSummary
+    getProviderSummary,
+    getCompletedOrders
 };

@@ -5,12 +5,14 @@ import { UserRole } from "../../../generated/prisma/enums";
 
 const router = Router();
 
+//? creating payment
 router.post('/create/:orderId',auth(UserRole.CUSTOMER, UserRole.PROVIDER, UserRole.ADMIN), paymentController.createPayment)
 
 router.get('/', auth(UserRole.CUSTOMER, UserRole.PROVIDER, UserRole.ADMIN), paymentController.getUsersPaymentsHistory);
 
 router.get('/:id',auth(UserRole.CUSTOMER, UserRole.PROVIDER, UserRole.ADMIN), paymentController.getPaymentDetails )
 
-router.post('/confirm', paymentController.handlePaymentConfirmWebHook);
+//? this is the after the payment webhook calls
+// router.post('/confirm', paymentController.handlePaymentConfirmWebHook);
 
 export const paymentRouter = router;
