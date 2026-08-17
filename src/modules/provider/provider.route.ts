@@ -32,7 +32,7 @@ router.patch("/orders/:id",auth(UserRole.PROVIDER, UserRole.ADMIN), providerCont
 
 
 //? summary 
-router.get('/summary', providerController.getProviderSummary)
+router.get('/summary',auth(UserRole.PROVIDER), providerController.getProviderSummary)
 
 
 export const providerRouter = router;
